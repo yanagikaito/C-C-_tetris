@@ -9,7 +9,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     DxLib_Init();
 
     /*** Window Init ***/
-    SetWindowText("TEST 2D GAME");
+    SetWindowText("tetris");
     SetWindowInitPosition(0, 0);
     SetGraphMode(900, 900, 32);
     SetBackgroundColor(0, 0, 0);				    // ウィンドウの背景色
