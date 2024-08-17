@@ -32,6 +32,26 @@ private:
 
 }Key;
 
+// ゲーム開始時の処理を行う関数
+void Game_Ini() {
+
+}
+
+// ゲーム終了時の処理を行う関数
+void Game_End() {
+
+}
+
+// ゲームの計算処理を行う関数
+void Game_Cal() {
+
+}
+
+// ゲームの描画処理を行う関数
+void Game_Draw() {
+
+}
+
 // プログラムは WinMain から始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
     _In_opt_  HINSTANCE hPrevInstance,
