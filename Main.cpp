@@ -1,4 +1,36 @@
 #include "DxLib.h"
+/*** キーボード設定 ***/
+#define DEF_KEY_PRESS_TIME (100)					// キーボード長押し回数
+
+/*** Keyクラス ***/
+class
+{
+public:
+    int input[256];									// キーボード入力情報
+
+    int GetKey()
+    {
+        char allkey[256];
+        GetHitKeyStateAll(allkey);
+        for (int i = 0; i < 256; i++)
+        {
+            if (allkey[i] == 1)						// 特定のキーは押されているか
+            {
+                if (input[i] < DEF_KEY_PRESS_TIME)	// 長押し上限まで押されているかどうか
+                {
+                    input[i] = input[i] + 1;		// 保存
+                }
+            }
+            else if (allkey[i] == 0)				// 特定のキーは押されていないか
+            {
+                input[i] = 0;
+            }
+        }
+        return 0;
+    }
+private:
+
+}Key;
 
 // プログラムは WinMain から始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
@@ -20,6 +52,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     /*** ループ処理 ***/
     while (ScreenFlip() == 0 &&		                // 裏画面の内容を表画面に反映
         ClearDrawScreen() == 0 &&	                // 画面を初期化
+        Key.GetKey() == 0 &&						// キーボード入力情報取得
         ProcessMessage() == 0)		                // ウインドウのメッセージを処理
     {
     }
