@@ -1,6 +1,33 @@
 #include "DxLib.h"
+
 /*** キーボード設定 ***/
 #define DEF_KEY_PRESS_TIME (100)					// キーボード長押し回数
+
+// ブロックに関する定数定義
+#define BLOCK_NUM_X (10)
+#define BLOCK_NUM_Y (20)
+
+// ブロックの1個1個の大きさ
+#define BLOCK_EDGE  (40)
+
+// 列挙体(ブロックタイプ)
+enum e_Color {
+
+    Col_No,
+    Col_Red,
+    Col_Blue,
+    Col_Green,
+    Col_Yellow,
+    Col_Total
+};
+
+struct BLOCK {
+
+    // x,y座標,色
+    int x;
+    int y;
+    int c;
+};
 
 /*** Keyクラス ***/
 class
@@ -32,9 +59,17 @@ private:
 
 }Key;
 
-// ゲーム開始時の処理を行う関数
-void Game_Ini() {
 
+// ゲーム開始時の処理を行う関数
+void Game_Ini(int y, int x, struct BLOCK(*p)) {
+
+    for (int y = 0; y < BLOCK_NUM_Y; y++) {
+        for (int x = 0; x < BLOCK_NUM_X; x++) {
+            p->x = x;
+            p->y = y;
+            p->c = e_Color::Col_No;
+        }
+    }
 }
 
 // ゲーム終了時の処理を行う関数
@@ -57,6 +92,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     _In_opt_  HINSTANCE hPrevInstance,
     _In_ LPSTR lpCmdLine,
     _In_ int nShowCmd) {
+
+    struct BLOCK block[BLOCK_NUM_X][BLOCK_NUM_Y];
+
+    for (int y = 0; y < BLOCK_NUM_Y; y++) {
+        for (int x = 0; x < BLOCK_NUM_X; x++) {
+            block[x][y] = {
+                x * BLOCK_EDGE,
+                y * BLOCK_EDGE,
+                e_Color::Col_No,
+            };
+        }
+    }
+
+    struct BLOCK* p = &block[BLOCK_NUM_X][BLOCK_NUM_Y];
+
     ChangeWindowMode(TRUE);
     DxLib_Init();
 
@@ -67,6 +117,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     SetBackgroundColor(0, 0, 0);				    // ウィンドウの背景色
     SetDrawScreen(DX_SCREEN_BACK);					// 描画先画面を裏画面にする
     SetAlwaysRunFlag(TRUE);							// ウインドウ非アクティブ状態でも処理を続行する
+
+    Game_Ini(BLOCK_NUM_X, BLOCK_NUM_Y, p);
 
 
     /*** ループ処理 ***/
