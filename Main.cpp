@@ -116,10 +116,10 @@ void Game_Cal() {
 void Game_Draw(int y, int x, struct BLOCK(*p)) {
 
     // フレームX
-    for (int x = 0; x < BLOCK_NUM_X + 2; x = x + 1) {
+    for (int x = 0; x < BLOCK_NUM_X + 3; x = x + 1) {
         DrawBox(x * BLOCK_EDGE,
             BLOCK_EDGE * BLOCK_NUM_Y,
-            BLOCK_EDGE * BLOCK_EDGE,
+            BLOCK_EDGE + BLOCK_EDGE,
             BLOCK_EDGE * BLOCK_NUM_Y + BLOCK_EDGE,
             GetColor(100, 100, 100),
             TRUE);
@@ -144,12 +144,32 @@ void Game_Draw(int y, int x, struct BLOCK(*p)) {
     // ブロック
     for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
         for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
-            DrawBox(shi_x + p->x * BLOCK_EDGE + BLOCK_EDGE,
-                p->y * BLOCK_EDGE,
-                shi_x + p->x - BLOCK_EDGE,
+            DrawBox(
+                // 左上頂点のX座標
+                shi_x + p->x * BLOCK_EDGE + BLOCK_EDGE - p->x,
+                // 左上頂点のY座標
+                p->y * BLOCK_EDGE + BLOCK_EDGE,
+                // 右下頂点のX座標
+                shi_x + p->x - BLOCK_EDGE + BLOCK_EDGE,
+                // 右下頂点のY座標
                 p->y + BLOCK_EDGE,
                 Color(p->c),
                 TRUE);
+        }
+    }
+
+    // 網目
+    for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
+        for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+            // 網目
+            DrawBox(
+                x * BLOCK_EDGE + BLOCK_EDGE,
+                y * BLOCK_EDGE,
+                x * BLOCK_EDGE + 2 * BLOCK_EDGE,
+                y * BLOCK_EDGE + BLOCK_EDGE,
+                GetColor(0, 0, 0),
+                FALSE);
+
         }
     }
 }
@@ -180,7 +200,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     /*** Window Init ***/
     SetWindowText("tetris");
     SetWindowInitPosition(0, 0);
-    SetGraphMode(900, 800, 32);
+    SetGraphMode(1000, 1200, 32);
     SetBackgroundColor(0, 0, 0);				    // ウィンドウの背景色
     SetDrawScreen(DX_SCREEN_BACK);					// 描画先画面を裏画面にする
     SetAlwaysRunFlag(TRUE);							// ウインドウ非アクティブ状態でも処理を続行する
