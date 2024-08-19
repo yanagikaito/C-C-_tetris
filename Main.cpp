@@ -30,6 +30,103 @@ struct BLOCK {
     int c;
 };
 
+struct GATHER {
+
+    // ブロック4種類
+    BLOCK block[4];
+    // 形状
+    int t;
+    // 回転
+    int r;
+};
+
+// ブロックの集まりのタイプを列挙体で定義
+enum e_Type {
+
+    // 四角形
+    Typ_squ,
+
+    // ストレート
+    Typ_str,
+
+    // 2blo2
+    Typ_2to2,
+
+    // blo_mid
+    Typ_mid,
+
+    // blo_end
+    Typ_end,
+
+    Typ_Total
+};
+
+// ブロックの集まりに関する変数代入
+GATHER Move_Sub(GATHER m, int x, int y) {
+
+    // 形状と色を代入
+    switch (m.t) {
+
+    case e_Type::Typ_squ:
+
+        m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+        m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+        m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+        m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+        break;
+
+    case e_Type::Typ_str:
+
+        switch (m.r) {
+
+        case 0:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[3].c };
+
+            break;
+
+        case 1:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 2:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 2 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 3:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 0 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+        }
+    }
+
+    return m;
+}
+
+// ブロックの集まり定義
+GATHER move;
+
+// 次に現れるブロックの集まりの定義
+GATHER next[5];
+
 // 色を決定する関数
 unsigned int Color(int c) {
 
