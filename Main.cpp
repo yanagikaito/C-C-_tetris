@@ -1,4 +1,5 @@
 #include "DxLib.h"
+#include "iostream"
 
 /*** キーボード設定 ***/
 #define DEF_KEY_PRESS_TIME (100)					// キーボード長押し回数
@@ -91,7 +92,7 @@ private:
 
 
 // ゲーム開始時の処理を行う関数
-void Game_Ini(int y, int x, struct BLOCK(*p)) {
+void Game_Ini(BLOCK* p) {
 
     for (int y = 0; y < BLOCK_NUM_Y; y++) {
         for (int x = 0; x < BLOCK_NUM_X; x++) {
@@ -113,7 +114,7 @@ void Game_Cal() {
 }
 
 // ゲームの描画処理を行う関数
-void Game_Draw(int y, int x, struct BLOCK(*p)) {
+void Game_Draw(BLOCK* p) {
 
     // フレームX
     for (int x = 0; x < BLOCK_NUM_X + 3; x = x + 1) {
@@ -169,7 +170,6 @@ void Game_Draw(int y, int x, struct BLOCK(*p)) {
                 y * BLOCK_EDGE + BLOCK_EDGE,
                 GetColor(0, 0, 0),
                 FALSE);
-
         }
     }
 }
@@ -180,7 +180,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     _In_ LPSTR lpCmdLine,
     _In_ int nShowCmd) {
 
-    struct BLOCK block[BLOCK_NUM_X][BLOCK_NUM_Y];
+    BLOCK block[BLOCK_NUM_X][BLOCK_NUM_Y];
 
     for (int y = 0; y < BLOCK_NUM_Y; y++) {
         for (int x = 0; x < BLOCK_NUM_X; x++) {
@@ -192,8 +192,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    struct BLOCK* p = &block[BLOCK_NUM_X][BLOCK_NUM_Y];
-
     ChangeWindowMode(TRUE);
     DxLib_Init();
 
@@ -203,10 +201,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     SetGraphMode(1000, 1200, 32);
     SetBackgroundColor(0, 0, 0);				    // ウィンドウの背景色
     SetDrawScreen(DX_SCREEN_BACK);					// 描画先画面を裏画面にする
-    SetAlwaysRunFlag(TRUE);							// ウインドウ非アクティブ状態でも処理を続行する
+    SetAlwaysRunFlag(TRUE);			                // ウインドウ非アクティブ状態でも処理を続行する
 
-
-    Game_Ini(BLOCK_NUM_X, BLOCK_NUM_Y, p);
+    for (int y = 0; y < BLOCK_NUM_Y; y++) {
+        for (int x = 0; x < BLOCK_NUM_X; x++) {
+            Game_Ini(&block[x][y]);
+        };
+    }
 
 
     /*** ループ処理 ***/
@@ -216,7 +217,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         ProcessMessage() == 0)		                // ウインドウのメッセージを処理
     {
         Game_Cal();
-        Game_Draw(BLOCK_NUM_X, BLOCK_NUM_Y, p);
+        for (int y = 0; y < BLOCK_NUM_Y; y++) {
+            for (int x = 0; x < BLOCK_NUM_X; x++) {
+                Game_Draw(&block[x][y]);
+            };
+        }
     }
 
     DxLib_End();					                // ＤＸライブラリ使用の終了処理
