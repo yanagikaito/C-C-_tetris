@@ -116,9 +116,143 @@ GATHER Move_Sub(GATHER m, int x, int y) {
 
             break;
         }
+
+        break;
+
+    case e_Type::Typ_2to2:
+
+        switch (m.r) {
+
+        case 0:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 2 + y, m.block[3].c };
+
+            break;
+
+        case 1:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 2:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 2 + y, m.block[3].c };
+
+            break;
+
+        case 3:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+        }
+
+        break;
+
+    case e_Type::Typ_mid:
+
+        switch (m.r) {
+
+        case 0:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 2 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 1:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 2:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 2 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 3:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 0 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        }
+
+        break;
+
+    case e_Type::Typ_end:
+
+        switch (m.r) {
+
+        case 0:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 2 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 2 + y, m.block[3].c };
+
+            break;
+
+        case 1:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * -1 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * -2 + x, BLOCK_EDGE * 1 + y, m.block[3].c };
+
+            break;
+
+        case 2:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 0 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 1 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 2 + y, m.block[3].c };
+
+            break;
+
+        case 3:
+
+            m.block[0] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 0 + y, m.block[0].c };
+            m.block[1] = { BLOCK_EDGE * 0 + x, BLOCK_EDGE * 1 + y, m.block[1].c };
+            m.block[2] = { BLOCK_EDGE * 1 + x, BLOCK_EDGE * 0 + y, m.block[2].c };
+            m.block[3] = { BLOCK_EDGE * 2 + x, BLOCK_EDGE * 0 + y, m.block[3].c };
+
+            break;
+        }
+
+        break;
+
     }
 
     return m;
+
 }
 
 // ブロックの集まり定義
@@ -244,13 +378,13 @@ void Game_Draw(BLOCK* p) {
         for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
             DrawBox(
                 // 左上頂点のX座標
-                shi_x + p->x * BLOCK_EDGE + BLOCK_EDGE - p->x,
+                shi_x + p->x * BLOCK_EDGE + BLOCK_EDGE,
                 // 左上頂点のY座標
-                p->y * BLOCK_EDGE + BLOCK_EDGE,
+                p->y = y * BLOCK_EDGE + BLOCK_EDGE,
                 // 右下頂点のX座標
-                shi_x + p->x - BLOCK_EDGE + BLOCK_EDGE,
+                shi_x + p->x - BLOCK_EDGE + p->x * 3 - p->x + 5,
                 // 右下頂点のY座標
-                p->y + BLOCK_EDGE,
+                p->y = y + BLOCK_EDGE,
                 Color(p->c),
                 TRUE);
         }
