@@ -11,6 +11,12 @@
 // ブロックの1個1個の大きさ
 #define BLOCK_EDGE  (32)
 
+// ブロックの集まり定義
+GATHER move;
+
+// 次に現れるブロックの集まりの定義
+GATHER next[5];
+
 // 列挙体(ブロックタイプ)
 enum e_Color {
 
@@ -255,11 +261,35 @@ GATHER Move_Sub(GATHER m, int x, int y) {
 
 }
 
-// ブロックの集まり定義
-GATHER move;
+// ブロックの集まりを初期化
+void Move_Ini(int n) {
 
-// 次に現れるブロックの集まりの定義
-GATHER next[5];
+    // 色をランダムで決定
+    unsigned int c =
+        GetRand(e_Color::Col_Total - e_Color::Col_Red - 1)
+        + e_Color::Col_Red;
+
+    // 色を代入
+    for (int i = 0; i < 4; i = i + 1) {
+
+        next[n].block[i].c = c;
+    }
+
+    // 形状をランダムで決定
+    next[n].t = GetRand(e_Type::Typ_Total - 1);
+
+    // 回転をランダムで決定
+    next[n].t = GetRand(4 - 1);
+
+    // next代入
+    next[n] = Move_Sub(
+        next[n],
+        BLOCK_EDGE * 4,
+        BLOCK_EDGE * 0);
+
+    // move代入
+    move = next[0];
+}
 
 // 色を決定する関数
 unsigned int Color(int c) {
