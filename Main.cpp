@@ -362,6 +362,16 @@ void Game_Ini(BLOCK* p) {
             p->c = e_Color::Col_No;
         }
     }
+
+    // ブロックの集まりの初期化
+    for (int i = 0; i < 5; i = i + 1) {
+        Move_Ini(p->x = i);
+    }
+
+    // nextずらす
+    for (int i = 0; i < 5 - 1; i = i + 1) {
+        next[i] = next[i + 1];
+    }
 }
 
 // ゲーム終了時の処理を行う関数
