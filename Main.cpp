@@ -311,11 +311,11 @@ unsigned int Color(int c) {
         break;
         // óŒ
     case e_Color::Col_Green:
-        c = GetColor(0, 0, 255);
+        c = GetColor(124, 252, 0);
         break;
         // â©êF
     case e_Color::Col_Yellow:
-        c = GetColor(0, 0, 255);
+        c = GetColor(255, 255, 0);
         break;
     }
 
