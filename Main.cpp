@@ -447,7 +447,7 @@ void Game_Draw(BLOCK* p) {
 
     // Next
     for (int i = 0; i < 5 - 1; i = i + 1) {
-        for (int j = 0; j, 4; j = j + 1) {
+        for (int j = 0; j < 4; j = j + 1) {
             DrawBox(
                 500 + next[i].block[j].x,
                 i * 200 + next[i].block[j].y,
