@@ -11,12 +11,6 @@
 // ブロックの1個1個の大きさ
 #define BLOCK_EDGE  (32)
 
-// ブロックの集まり定義
-GATHER move;
-
-// 次に現れるブロックの集まりの定義
-GATHER next[5];
-
 // 列挙体(ブロックタイプ)
 enum e_Color {
 
@@ -66,6 +60,13 @@ enum e_Type {
 
     Typ_Total
 };
+
+// ブロックの集まり定義
+GATHER move;
+
+// 次に現れるブロックの集まりの定義
+GATHER next[5];
+
 
 // ブロックの集まりに関する変数代入
 GATHER Move_Sub(GATHER m, int x, int y) {
@@ -365,7 +366,7 @@ void Game_Ini(BLOCK* p) {
 
     // ブロックの集まりの初期化
     for (int i = 0; i < 5; i = i + 1) {
-        Move_Ini(p->x = i);
+        Move_Ini(i);
     }
 
     // nextずらす
@@ -441,6 +442,25 @@ void Game_Draw(BLOCK* p) {
                 y * BLOCK_EDGE + BLOCK_EDGE,
                 GetColor(0, 0, 0),
                 FALSE);
+        }
+    }
+
+    // Next
+    for (int i = 0; i < 5 - 1; i = i + 1) {
+        for (int j = 0; j, 4; j = j + 1) {
+            DrawBox(
+                500 + next[i].block[j].x,
+                i * 200 + next[i].block[j].y,
+                500 + next[i].block[j].x + BLOCK_EDGE,
+                i * 200 + next[i].block[i].y + BLOCK_EDGE,
+                Color(next[i].block[j].c), TRUE);
+
+            DrawBox(
+                500 + next[i].block[j].x,
+                i * 200 + next[i].block[j].y,
+                500 + next[i].block[j].x + BLOCK_EDGE,
+                i * 200 + next[i].block[j].y + BLOCK_EDGE,
+                GetColor(0, 0, 0), FALSE);
         }
     }
 }
