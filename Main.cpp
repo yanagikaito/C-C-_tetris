@@ -61,6 +61,8 @@ enum e_Type {
     Typ_Total
 };
 
+char allKey[256];
+
 // ブロックの集まり定義
 GATHER move;
 
@@ -375,14 +377,85 @@ void Game_Ini(BLOCK* p) {
     }
 }
 
+// ブロックとブロックの接触判定
+bool HitJudg(BLOCK* p) {
+
+    for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
+        for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+            for (int i = 0; i < 4; i = i + 1) {
+
+                // 配列外は探索不可能なため関数終了(x方向)
+                if (x - p->x < 0 ||
+                    x + p->x == BLOCK_NUM_X ||
+                    y + p->y == BLOCK_NUM_Y) {
+
+                    // 非接触
+                    return FALSE;
+                }
+
+                // 同じ座標の指定した場所にブロックが存在する場合
+                if (move.block[i].x == p->x &&
+                    move.block[i].y == p->y &&
+                    move.block[i].c != e_Color::Col_No &&
+                    p->x + p->y, p->y + p->y, p->c != e_Color::Col_No) {
+
+                    // 接触
+                    return TRUE;
+                }
+            }
+        }
+    }
+
+    // 非接触
+    return FALSE;
+}
+
 // ゲーム終了時の処理を行う関数
 void Game_End() {
 
 }
 
 // ゲームの計算処理を行う関数
-void Game_Cal() {
+void Game_Cal(BLOCK* p) {
 
+    // ブロック回転
+    // 左回転(反時計回り)
+    if (allKey[KEY_INPUT_L] == 1) {
+
+        move.r = move.r + 1;
+    }
+
+    // 右回転(時計回り)
+    else if (allKey[KEY_INPUT_R] == 1) {
+
+        move.r = move.r - 1;
+    }
+
+    // ブロック回転範囲
+    if (move.r < 0) {
+
+        move.r = 3;
+    }
+
+    else if (move.r > 3) {
+
+        move.r = 0;
+    }
+
+    // ブロック集まり左右方向への移動
+    if (allKey[KEY_INPUT_D] == 1) {
+
+        // ブロック更新
+        move = Move_Sub(
+            move,
+            move.block[0].x + BLOCK_EDGE,
+            move.block[0].y);
+
+        // ブロックの座標制約
+        if (HitJudg(p) == TRUE) {
+
+        }
+    }
 }
 
 // ゲームの描画処理を行う関数
@@ -507,9 +580,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         Key.GetKey() == 0 &&						// キーボード入力情報取得
         ProcessMessage() == 0)		                // ウインドウのメッセージを処理
     {
-        Game_Cal();
+
         for (int y = 0; y < BLOCK_NUM_Y; y++) {
             for (int x = 0; x < BLOCK_NUM_X; x++) {
+                Game_Cal(&block[x][y]);
                 Game_Draw(&block[x][y]);
             };
         }
