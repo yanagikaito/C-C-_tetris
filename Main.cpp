@@ -442,7 +442,7 @@ void Game_Cal(BLOCK* p) {
         move.r = 0;
     }
 
-    // ブロック集まり左右方向への移動
+    // ブロック集まり右方向への移動
     if (allKey[KEY_INPUT_D] == 1) {
 
         // ブロック更新
@@ -454,6 +454,29 @@ void Game_Cal(BLOCK* p) {
         // ブロックの座標制約
         if (HitJudg(p) == TRUE) {
 
+            move = Move_Sub(
+                move,
+                move.block[0].x - BLOCK_EDGE,
+                move.block[0].y);
+        }
+    }
+
+    // ブロック集まり左方向への移動
+    if (allKey[KEY_INPUT_A] == 1) {
+
+        // ブロック更新
+        move = Move_Sub(
+            move,
+            move.block[0].x - BLOCK_EDGE,
+            move.block[0].y);
+
+        // ブロックの座標制約
+        if (HitJudg(p) == TRUE) {
+
+            move = Move_Sub(
+                move,
+                move.block[0].x + BLOCK_EDGE,
+                move.block[0].y);
         }
     }
 }
@@ -502,6 +525,17 @@ void Game_Draw(BLOCK* p) {
                 Color(p->c),
                 TRUE);
         }
+    }
+
+    //move
+    for (int i = 0; i < 4; i = i + 1) {
+
+        DrawBox(
+            shi_x + move.block[i].x,
+            move.block[i].y,
+            shi_x + move.block[i].x + BLOCK_EDGE,
+            move.block[i].y + BLOCK_EDGE,
+            Color(move.block[i].c), TRUE);
     }
 
     // 網目
