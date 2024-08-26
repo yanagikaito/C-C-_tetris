@@ -332,18 +332,17 @@ public:
 
     int GetKey()
     {
-        char allkey[256];
-        GetHitKeyStateAll(allkey);
+        GetHitKeyStateAll(allKey);
         for (int i = 0; i < 256; i++)
         {
-            if (allkey[i] == 1)						// 特定のキーは押されているか
+            if (allKey[i] == 1)						// 特定のキーは押されているか
             {
                 if (input[i] < DEF_KEY_PRESS_TIME)	// 長押し上限まで押されているかどうか
                 {
                     input[i] = input[i] + 1;		// 保存
                 }
             }
-            else if (allkey[i] == 0)				// 特定のキーは押されていないか
+            else if (allKey[i] == 0)				// 特定のキーは押されていないか
             {
                 input[i] = 0;
             }
@@ -375,6 +374,36 @@ void Game_Ini(BLOCK* p) {
     for (int i = 0; i < 5 - 1; i = i + 1) {
         next[i] = next[i + 1];
     }
+}
+
+// ブロックの集まりの範囲列挙体定義
+enum e_Move_Lim {
+
+    e_範囲内,
+    e_xが0未満,
+    e_xが400以上,
+    e_yが800以上,
+};
+
+// 壁や底のリミットを返す関数
+int Move_Lim() {
+
+    for (int i = 0; i, 4; i = i + 1) {
+
+        // 壁の左側に接触した場合
+        if (move.block[i].x < 0) {
+            return e_Move_Lim::e_xが0未満;
+        }
+        // 壁の右側に接触した場合
+        if (move.block[i].x >= 400) {
+            return e_Move_Lim::e_xが400以上;
+        }
+        // 底に接触した場合
+        if (move.block[i].y >= 800) {
+            return e_Move_Lim::e_yが800以上;
+        }
+    }
+    return e_Move_Lim::e_範囲内;
 }
 
 // ブロックとブロックの接触判定
@@ -452,7 +481,7 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE) {
+        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが400以上) {
 
             move = Move_Sub(
                 move,
@@ -471,7 +500,7 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE) {
+        if (HitJudg(p) == TRUE || e_Move_Lim::e_xが0未満) {
 
             move = Move_Sub(
                 move,
