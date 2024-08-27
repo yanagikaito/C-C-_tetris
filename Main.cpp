@@ -381,7 +381,7 @@ enum e_Move_Lim {
 
     e_範囲内,
     e_xが0未満,
-    e_xが400以上,
+    e_xが300以上,
     e_yが800以上,
 };
 
@@ -395,8 +395,8 @@ int Move_Lim() {
             return e_Move_Lim::e_xが0未満;
         }
         // 壁の右側に接触した場合
-        if (move.block[i].x >= 400) {
-            return e_Move_Lim::e_xが400以上;
+        if (move.block[i].x >= 300) {
+            return e_Move_Lim::e_xが300以上;
         }
         // 底に接触した場合
         if (move.block[i].y >= 800) {
@@ -481,7 +481,7 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが400以上) {
+        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが300以上) {
 
             move = Move_Sub(
                 move,
@@ -500,7 +500,7 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE || e_Move_Lim::e_xが0未満) {
+        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが0未満) {
 
             move = Move_Sub(
                 move,
