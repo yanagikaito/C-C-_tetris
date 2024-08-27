@@ -388,7 +388,7 @@ enum e_Move_Lim {
 // •Ç‚â’ê‚ÌƒŠƒ~ƒbƒg‚ğ•Ô‚·ŠÖ”
 int Move_Lim() {
 
-    for (int i = 0; i, 4; i = i + 1) {
+    for (int i = 0; i < 4; i = i + 1) {
 
         // •Ç‚Ì¶‘¤‚ÉÚG‚µ‚½ê‡
         if (move.block[i].x < 0) {
