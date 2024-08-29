@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "iostream"
 
+
 /*** キーボード設定 ***/
 #define DEF_KEY_PRESS_TIME (100)					// キーボード長押し回数
 
@@ -10,6 +11,7 @@
 
 // ブロックの1個1個の大きさ
 #define BLOCK_EDGE  (32)
+
 
 // 列挙体(ブロックタイプ)
 enum e_Color {
@@ -407,16 +409,16 @@ int Move_Lim() {
 }
 
 // ブロックとブロックの接触判定
-bool HitJudg(BLOCK* p) {
+bool HitJudg(BLOCK* p, int xs, int ys) {
 
     for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
         for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
             for (int i = 0; i < 4; i = i + 1) {
 
                 // 配列外は探索不可能なため関数終了(x方向)
-                if (x - p->x < 0 ||
-                    x + p->x == BLOCK_NUM_X ||
-                    y + p->y == BLOCK_NUM_Y) {
+                if (x - xs < 0 ||
+                    x + xs == BLOCK_NUM_X ||
+                    y + ys == BLOCK_NUM_Y) {
 
                     // 非接触
                     return FALSE;
@@ -426,7 +428,7 @@ bool HitJudg(BLOCK* p) {
                 if (move.block[i].x == p->x &&
                     move.block[i].y == p->y &&
                     move.block[i].c != e_Color::Col_No &&
-                    p->x + p->y, p->y + p->y, p->c != e_Color::Col_No) {
+                    p[x + xs, y + ys].c != e_Color::Col_No) {
 
                     // 接触
                     return TRUE;
@@ -481,7 +483,8 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが300以上) {
+        if (HitJudg(p, +1, 0) == TRUE || Move_Lim() == e_Move_Lim::e_xが300以上) {
+
 
             move = Move_Sub(
                 move,
@@ -493,6 +496,7 @@ void Game_Cal(BLOCK* p) {
     // ブロック集まり左方向への移動
     if (allKey[KEY_INPUT_A] == 1) {
 
+
         // ブロック更新
         move = Move_Sub(
             move,
@@ -500,7 +504,7 @@ void Game_Cal(BLOCK* p) {
             move.block[0].y);
 
         // ブロックの座標制約
-        if (HitJudg(p) == TRUE || Move_Lim() == e_Move_Lim::e_xが0未満) {
+        if (HitJudg(p, +1, 0) == TRUE || Move_Lim() == e_Move_Lim::e_xが0未満) {
 
             move = Move_Sub(
                 move,
@@ -605,7 +609,8 @@ void Game_Draw(BLOCK* p) {
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
     _In_opt_  HINSTANCE hPrevInstance,
     _In_ LPSTR lpCmdLine,
-    _In_ int nShowCmd) {
+    _In_ int nShowCmd)
+{
 
     BLOCK block[BLOCK_NUM_X][BLOCK_NUM_Y];
 
@@ -636,7 +641,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         };
     }
 
-
     /*** ループ処理 ***/
     while (ScreenFlip() == 0 &&		                // 裏画面の内容を表画面に反映
         ClearDrawScreen() == 0 &&	                // 画面を初期化
@@ -644,9 +648,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         ProcessMessage() == 0)		                // ウインドウのメッセージを処理
     {
 
+        Game_Cal(&block[BLOCK_NUM_X - 1][BLOCK_NUM_Y - 1]);
+
         for (int y = 0; y < BLOCK_NUM_Y; y++) {
             for (int x = 0; x < BLOCK_NUM_X; x++) {
-                Game_Cal(&block[x][y]);
                 Game_Draw(&block[x][y]);
             };
         }
