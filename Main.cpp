@@ -326,6 +326,9 @@ unsigned int Color(int c) {
     return c;
 }
 
+// カウンタ
+int Cou;
+
 /*** Keyクラス ***/
 class
 {
@@ -376,6 +379,9 @@ void Game_Ini(BLOCK* p) {
     for (int i = 0; i < 5 - 1; i = i + 1) {
         next[i] = next[i + 1];
     }
+
+    // カウント初期化
+    Cou = 0;
 }
 
 // ブロックの集まりの範囲列挙体定義
@@ -438,6 +444,21 @@ bool HitJudg(BLOCK* p, int xs, int ys) {
     }
 
     // 非接触
+    return FALSE;
+}
+
+// moveY方向計算
+bool Move_Ycal() {
+
+    Cou = Cou + 1;
+
+    // 座標更新
+    move = Move_Sub(
+        move,
+        move.block[0].x,
+        // 1秒間に1個Y方向に移動する
+        BLOCK_EDGE * (int)(Cou / 60));
+
     return FALSE;
 }
 
@@ -512,6 +533,17 @@ void Game_Cal(BLOCK* p) {
                 move.block[0].y);
         }
     }
+
+    bool y_fla = FALSE;
+
+    // ブロック集まり下方向への移動
+    if (allKey[KEY_INPUT_S] == 1) {
+
+        y_fla = TRUE;
+    }
+
+    // ブロックY方向移動計算
+    Move_Ycal();
 }
 
 // ゲームの描画処理を行う関数
