@@ -448,7 +448,7 @@ bool HitJudg(BLOCK* p, int xs, int ys) {
 }
 
 // moveY方向計算
-bool Move_Ycal() {
+bool Move_Ycal(BLOCK* p) {
 
     Cou = Cou + 1;
 
@@ -459,6 +459,39 @@ bool Move_Ycal() {
         // 1秒間に1個Y方向に移動する
         BLOCK_EDGE * (int)(Cou / 60));
 
+    // ブロックy座標の範囲制約
+    if (Move_Lim() == e_Move_Lim::e_yが800以上 ||
+        HitJudg(p, 0, 0) == TRUE) {
+
+        // 座標前の状態に戻す
+        move = Move_Sub(
+            move,
+            move.block[0].x,
+            move.block[0].y - BLOCK_EDGE);
+
+        // moveをblockに代入
+        for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
+            for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+                for (int i = 0; i < 4; i = i + 1) {
+                    if (p->x == move.block[i].x &&
+                        p->y == move.block[i].y) {
+                        p->c = move.block[i].c;
+                    }
+                }
+            }
+        }
+
+        // カウント初期化
+        Cou = 0;
+
+        // nextずらす
+        for (int i = 0; i < 5 - 1; i = i + 1) {
+            next[i] = next[i + 1];
+        }
+
+        // ブロックの集まりの初期化
+        Move_Ini(5 - 1);
+    }
     return FALSE;
 }
 
@@ -543,7 +576,7 @@ void Game_Cal(BLOCK* p) {
     }
 
     // ブロックY方向移動計算
-    Move_Ycal();
+    Move_Ycal(p);
 }
 
 // ゲームの描画処理を行う関数
