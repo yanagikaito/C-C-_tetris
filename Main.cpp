@@ -456,6 +456,7 @@ bool Move_Ycal(BLOCK* p) {
     move = Move_Sub(
         move,
         move.block[0].x,
+
         // 1秒間に1個Y方向に移動する
         BLOCK_EDGE * (int)(Cou / 60));
 
@@ -484,6 +485,66 @@ bool Move_Ycal(BLOCK* p) {
         // カウント初期化
         Cou = 0;
 
+        // ブロック消去判断
+        bool del = TRUE;
+
+        // 消去する個数
+        int del_row = 0;
+
+        // 消去する座標
+        int del_y = 0;
+
+        for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
+
+            // 初期化
+            del = TRUE;
+
+            for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+
+                // 横1列に1つでも空白が存在する場合
+                if (p->c == e_Color::Col_No) {
+
+                    // 消去中止
+                    del = FALSE;
+                }
+            }
+
+            if (del == TRUE) {
+
+                // 消去列数カウント
+                del_row = del_row + 1;
+
+                // 消去した最後の列を代入
+                del_y = y;
+
+                //横1列のブロックを全て消去
+                for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+                    p->c = e_Color::Col_No;
+                }
+            }
+        }
+
+        // 消去した列数分のブロックの位置移動
+        if (del_row != 0) {
+
+            for (int y = BLOCK_NUM_Y - 1; y > 0; y = y + 1) {
+
+                // 消去した最後の列の場合,列数分ブロックの位置移動
+                if (y == del_y) {
+
+                    // ブロック底からループ
+                    for (int y = del_y; y != del_row; y = y - 1) {
+                        for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+                            p->c = p[x, y - del_row].c;
+                            p[x, y - del_row].c = e_Color::Col_No;
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
         // nextずらす
         for (int i = 0; i < 5 - 1; i = i + 1) {
             next[i] = next[i + 1];
@@ -491,7 +552,12 @@ bool Move_Ycal(BLOCK* p) {
 
         // ブロックの集まりの初期化
         Move_Ini(5 - 1);
+
+        // 接触
+        return TRUE;
     }
+
+    // 非接触
     return FALSE;
 }
 
@@ -572,10 +638,17 @@ void Game_Cal(BLOCK* p) {
     // ブロック集まり下方向への移動
     if (allKey[KEY_INPUT_S] == 1) {
 
-        y_fla = TRUE;
+        while (1) {
+
+            if (Move_Ycal(p) == TRUE) {
+
+                // 無限ループ解除
+                break;
+            }
+        }
     }
 
-    // ブロックY方向移動計算
+    // ブロックY方向移動計算(時間)
     Move_Ycal(p);
 }
 
