@@ -390,7 +390,7 @@ enum e_Move_Lim {
     e_範囲内,
     e_xが0未満,
     e_xが300以上,
-    e_yが800以上,
+    e_yが600以上,
 };
 
 // 壁や底のリミットを返す関数
@@ -407,8 +407,8 @@ int Move_Lim() {
             return e_Move_Lim::e_xが300以上;
         }
         // 底に接触した場合
-        if (move.block[i].y >= 800) {
-            return e_Move_Lim::e_yが800以上;
+        if (move.block[i].y >= 600) {
+            return e_Move_Lim::e_yが600以上;
         }
     }
     return e_Move_Lim::e_範囲内;
@@ -460,7 +460,7 @@ bool Move_Ycal(BLOCK* p) {
         BLOCK_EDGE * (int)(Cou / 60));
 
     // ブロックy座標の範囲制約
-    if (Move_Lim() == e_Move_Lim::e_yが800以上 ||
+    if (Move_Lim() == e_Move_Lim::e_yが600以上 ||
         HitJudg(p, 0, 0) == TRUE) {
 
         // 座標前の状態に戻す
