@@ -434,7 +434,7 @@ bool HitJudg(BLOCK* p, int xs, int ys) {
                 if (move.block[i].x == p->x &&
                     move.block[i].y == p->y &&
                     move.block[i].c != e_Color::Col_No &&
-                    p[x + xs, y + ys].c != e_Color::Col_No) {
+                    (p + x + xs)[y + ys].c != e_Color::Col_No) {
 
                     // 接触
                     return TRUE;
@@ -527,7 +527,7 @@ bool Move_Ycal(BLOCK* p) {
         // 消去した列数分のブロックの位置移動
         if (del_row != 0) {
 
-            for (int y = BLOCK_NUM_Y - 1; y > 0; y = y + 1) {
+            for (int y = BLOCK_NUM_Y - 1; y > 0; y = y - 1) {
 
                 // 消去した最後の列の場合,列数分ブロックの位置移動
                 if (y == del_y) {
@@ -535,8 +535,8 @@ bool Move_Ycal(BLOCK* p) {
                     // ブロック底からループ
                     for (int y = del_y; y != del_row; y = y - 1) {
                         for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
-                            p->c = p[x, y - del_row].c;
-                            p[x, y - del_row].c = e_Color::Col_No;
+                            p->c = (p + BLOCK_NUM_Y * x)[y - del_row].c;
+                            (p + BLOCK_NUM_Y * x)[y - del_row].c = e_Color::Col_No;
                         }
                     }
 
@@ -545,13 +545,13 @@ bool Move_Ycal(BLOCK* p) {
             }
         }
 
+        // ブロックの集まりの初期化
+        Move_Ini(5 - 1);
+
         // nextずらす
         for (int i = 0; i < 5 - 1; i = i + 1) {
             next[i] = next[i + 1];
         }
-
-        // ブロックの集まりの初期化
-        Move_Ini(5 - 1);
 
         // 接触
         return TRUE;
@@ -562,8 +562,20 @@ bool Move_Ycal(BLOCK* p) {
 }
 
 // ゲーム終了時の処理を行う関数
-void Game_End() {
+bool Game_End(BLOCK* p) {
 
+    for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+
+        // 1番上の列にブロックが存在しているか判断
+        if (p->c != e_Color::Col_No) {
+
+            // ゲーム終了
+            return TRUE;
+        }
+    }
+
+    // ゲーム続行
+    return FALSE;
 }
 
 // ゲームの計算処理を行う関数
@@ -650,6 +662,13 @@ void Game_Cal(BLOCK* p) {
 
     // ブロックY方向移動計算(時間)
     Move_Ycal(p);
+
+    // ゲームオーバーか否か判断
+    if (Game_End(p) == TRUE) {
+
+        // ゲーム初期化
+        Game_Ini(p);
+    }
 }
 
 // ゲームの描画処理を行う関数
@@ -707,11 +726,19 @@ void Game_Draw(BLOCK* p) {
             shi_x + move.block[i].x + BLOCK_EDGE,
             move.block[i].y + BLOCK_EDGE,
             Color(move.block[i].c), TRUE);
+
+        // String 
+        DrawFormatString(
+            shi_x + move.block[i].x + 20,
+            move.block[i].y + 15,
+            GetColor(0, 0, 0),
+            "%d", move.block[i].c);
     }
 
     // 網目
     for (int y = 0; y < BLOCK_NUM_Y; y = y + 1) {
         for (int x = 0; x < BLOCK_NUM_X; x = x + 1) {
+
             // 網目
             DrawBox(
                 x * BLOCK_EDGE + BLOCK_EDGE,
@@ -785,8 +812,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         Key.GetKey() == 0 &&						// キーボード入力情報取得
         ProcessMessage() == 0)		                // ウインドウのメッセージを処理
     {
+        BLOCK* p;
 
-        Game_Cal(&block[BLOCK_NUM_X - 1][BLOCK_NUM_Y - 1]);
+        p = &block[0][0];
+
+        Game_Cal(p);
 
         for (int y = 0; y < BLOCK_NUM_Y; y++) {
             for (int x = 0; x < BLOCK_NUM_X; x++) {
